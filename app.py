@@ -31,9 +31,9 @@ resultados = {
 @app.route("/analyze", methods=["POST"])
 def analyze():
     file = request.files["file"]
-    image = Image.open(file.stream).resize((224, 224))
-    img_array = np.array(image) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+    image = Image.open(file.stream).convert('L').resize((28, 28))
+    img_array = np.array(image).astype("float32") / 255.0
+    img_array = img_array.reshape(1, 28, 28, 1)
 
     prediction = model.predict(img_array)
     predicted_class = np.argmax(prediction)
